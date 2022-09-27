@@ -47,10 +47,15 @@ describe('Test Focus States on all pages on Enable', () => {
         let checkedPseudoEl = false;
 
         const isYoutubeIframe = (activeElement.nodeName === 'IFRAME' && activeElement.src.indexOf('https://www.youtube.com/') === 0);
-
-        const isRangeInput = (activeElement.nodeName === 'INPUT' && activeElement.getAttribute('type') === 'range');
+        const doNotCheck = (
+          isYoutubeIframe ||
+          (activeElement === document.body) ||
+          activeElement.id === 'bottomScrollSection' ||
+          activeElement.id === 'inputaddressheader' ||
+          activeElement.nodeName === 'IFRAME'
+        )
         
-        if (isRangeInput && !hasFocusRing) {
+        if (!hasFocusRing) {
           let rangeThumbSlideStyle = window.getComputedStyle(activeElement, '::-webkit-slider-thumb');
           checkedPseudoEl = true;
           outline = rangeThumbSlideStyle.outline;
@@ -67,19 +72,17 @@ describe('Test Focus States on all pages on Enable', () => {
           outlineColor,
           outlineWidth,
           outlineStyle,
-          isEnableSkipLink: activeElement.classList.contains('enable-mobile-visible-on-focus'),
+          doNotCheck,
           isBody: activeElement === document.body,
           isYoutubeIframe,
-          isRangeInput,
           checkedPseudoEl
         }
 
       });
 
       //console.log(`checking `, domInfo.html, domInfo.parentClass);
-      // Step 4: Do Tests ... but not on enable skip link (we'll handle that
-      // someplace else)
-      if (!domInfo.isEnableSkipLink && !domInfo.isBody && !domInfo.isYoutubeIframe) {
+      // Step 4: Do Tests 
+      if (!domInfo.doNotCheck) {
         
         if (!domInfo.hasFocusRing) {
           console.log('Bad focus on: ', domInfo.html);
@@ -97,9 +100,12 @@ describe('Test Focus States on all pages on Enable', () => {
   for (let i=0; i<fileList.length; i++) {
     const file = fileList[i];
     it(`Desktop Breakpoint: Test focus states on ${fileList[i]}`, async () => {
+      console.log('testing desktop');
       await testPage(fileList[i], desktopPage);
     });
+
     it(`Mobile Breakpoint: Test focus states on ${fileList[i]}`, async () => {
+      console.log('testing mobile');
       await testPage(fileList[i], mobilePage);
     });
   }

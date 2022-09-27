@@ -8,7 +8,7 @@ const filenameWithoutPath = argv[argv.length - 1];
 jest.setTimeout(10000);
 
 const config = {
-  "BASE_URL": `http://localhost:8888`,
+  "BASE_URL": `http://www.shiseido.com`,
   "KEYPRESS_TIMEOUT": 250,
   "KEYPRESS_FAST_TIMEOUT": 100,
   "DESKTOP_WIDTH": 1024,
